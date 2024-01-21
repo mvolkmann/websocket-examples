@@ -1,96 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <title>WebSocket Demo</title>
     <script>
-      window.onload = () => {
-        // Find various DOM elements.
-        const errorMessage = document.getElementById('error-message');
-        const form = document.getElementById('form');
-        const receivedArea = document.getElementById('received-area');
-        const sendInput = document.getElementById('send-input');
-        const status = document.getElementById('status');
+      const ws = new WebSocket('ws://localhost:3001');
+      ws.onopen = () => {
+        console.log('ws open');
+        ws.send('Hello from client!');
+      };
+      ws.onmessage = event => {
+        console.log(`received "${event.data}"`);
 
-        // Open a connection to the WebSocket server.
-        let wsOpen = false;
-        const WS_URL = 'ws://localhost:1919';
-        const ws = new WebSocket(WS_URL);
-
-        // When the WebSocket connection is opened ...
-        ws.addEventListener('open', event => {
-          wsOpen = true;
-          status.textContent = 'The WebSocket is open.';
-        });
-
-        // When the WebSocket connection is closed ...
-        ws.addEventListener('close', event => {
-          wsOpen = false;
-          status.textContent =
-            'The WebSocket is closed. ' + 'Refresh when the server is ready.';
-        });
-
-        // When a WebSocket message is received ...
-        ws.addEventListener('message', event => {
-          // Display the message in the received area of the UI.
-          const div = document.createElement('div');
-          div.textContent = event.data;
-          receivedArea.append(div);
-        });
-
-        // When a WebSocket error occurs ...
-        ws.addEventListener('error', event => {
-          // For security reasons, there is no
-          // useful information in this event object.
-          errorMessage.textContent = `Failed to connect to ${WS_URL}.`;
-        });
-
-        // When the form containing a message to send is submitted ...
-        form.addEventListener('submit', event => {
-          event.preventDefault();
-          if (wsOpen) {
-            // Send the message to the WebSocket server.
-            ws.send(sendInput.value);
-            sendInput.value = '';
-          } else {
-            errorMessage.textContent =
-              'Cannot send because the WebSocket is closed.';
-          }
-        });
+        // Either the client or the server can close the connection.
+        // ws.send('stop'); // ask server to close the WebSocket
+        ws.close(); // close WebSocket from client
+      };
+      ws.onerror = error => {
+        console.log('ws error:', error);
+      };
+      ws.onclose = () => {
+        console.log('ws closed');
       };
     </script>
-
-    <style>
-      #error-message {
-        color: red;
-      }
-
-      #form {
-        display: flex;
-      }
-
-      input,
-      label {
-        margin-right: 0.5rem;
-      }
-
-      label {
-        font-weight: bold;
-      }
-    </style>
   </head>
   <body>
-    <div id="status"></div>
-    <div id="error-message"></div>
-    <form id="form">
-      <label>Send</label>
-      <input id="send-input" autofocus />
-      <button>Send</button>
-    </form>
-    <div>
-      <label>Received</label>
-      <div id="received-area"></div>
-    </div>
+    <h1>WebSockets Demo</h1>
+    <p>See output in DevTools Console.</p>
   </body>
 </html>

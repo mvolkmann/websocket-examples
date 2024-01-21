@@ -9,15 +9,29 @@ app.get('/greet', (req, res) => {
 });
 
 // Create a WebSocket server.
-const wss = new WebSocket.Server({port: 1919});
+const wsServer = new WebSocket.Server({port: 3001});
 
 // When a client connects ...
-wss.on('connection', ws => {
+wsServer.on('connection', ws => {
+  ws.onopen = () => {
+    console.log('WebSocket is open.');
+  };
+
   // Listen for messages from the client.
-  ws.on('message', message => {
+  ws.onmessage = event => {
+    const message = event.data;
+    // console.log('server.js onmessage: event =', event);
+    console.log(`received "${message}"`);
+    if (message === 'stop') {
+      ws.close();
+    } else {
+      ws.send('Hello from server!');
+    }
+
+    /*
     // Broadcast the message to all the clients.
-    // wss.clients is not an Array, so you cannot use a for-of loop.
-    wss.clients.forEach(client => {
+    // wsServer.clients is not an Array, so you cannot use a for-of loop.
+    wsServer.clients.forEach(client => {
       const isOpen = client.readyState === WebSocket.OPEN;
 
       // To send to all open clients,
@@ -29,10 +43,16 @@ wss.on('connection', ws => {
       //const isSelf = client === ws;
       //if (isOpen && !isSelf) client.send(message);
     });
-  });
+    */
+  };
 
-  // Send an initial message to the newly connected client.
-  ws.send('connected to WebSocket server');
+  ws.onerror = error => {
+    console.error('WebSocket error:', error);
+  };
+
+  ws.onclose = () => {
+    console.log('WebSocket is closed.');
+  };
 });
 
 app.listen(3000, function () {
