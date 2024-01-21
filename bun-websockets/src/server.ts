@@ -10,6 +10,7 @@ app.get('/greet', (c: Context) => {
 });
 
 const wsServer = Bun.serve({
+  // The WebSocket port defaults to 3000 which conflicts with the HTTP server.
   port: 3001,
   fetch(req, server) {
     // Upgrade the request to support WebSockets.
@@ -28,11 +29,18 @@ const wsServer = Bun.serve({
     },
     message(ws, message) {
       console.log(`received "${message}"`);
-      ws.send('Hello from server!');
+      if (message === 'stop') {
+        ws.close();
+      } else {
+        ws.send('Hello from server!');
+      }
     },
-    // TODO: Wby is this called?
+    // See WebSocket protocol status codes at
+    // https://datatracker.ietf.org/doc/html/rfc6455#section-7.4
+    // 1000 is normal closure.
     close(ws, code, message) {
-      console.log('WebSocket closed with code', code, 'and message', message);
+      console.log('WebSocket closed with code', code);
+      if (message) console.log(`WebSocket closed with message "${message}"`);
     }
   }
 });

@@ -7,6 +7,7 @@
       ws.onopen = () => {
         console.log('ws open');
         ws.send('Hello from client!');
+        ws.send('stop');
       };
       ws.onmessage = event => {
         console.log(`received "${event.data}"`);
