@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SSE Demo</title>
+    <script>
+      const ws = new WebSocket('ws://localhost:3001');
+      ws.onopen = () => {
+        console.log('ws open');
+        ws.send('Hello from client');
+      };
+      ws.onmessage = event => {
+        console.log(`received "${event.data}"`);
+      };
+      ws.onerror = error => {
+        console.log('ws error:', error);
+      };
+      ws.onclose = () => {
+        console.log('ws closed');
+      };
+    </script>
+  </head>
+  <body>
+    <h1>WebSockets Demo</h1>
+    <p>See output in DevTools Console.</p>
+  </body>
+</html>
