@@ -7,10 +7,13 @@
       ws.onopen = () => {
         console.log('ws open');
         ws.send('Hello from client!');
-        ws.send('stop');
       };
       ws.onmessage = event => {
         console.log(`received "${event.data}"`);
+
+        // Either the client or the server can close the connection.
+        ws.send('stop'); // ask server to close the WebSocket
+        // ws.close(); // close WebSocket from client
       };
       ws.onerror = error => {
         console.log('ws error:', error);

@@ -38,6 +38,7 @@ const wsServer = Bun.serve({
     // See WebSocket protocol status codes at
     // https://datatracker.ietf.org/doc/html/rfc6455#section-7.4
     // 1000 is normal closure.
+    // 1005 is used when the client closes the WebSocket.
     close(ws, code, message) {
       console.log('WebSocket closed with code', code);
       if (message) console.log(`WebSocket closed with message "${message}"`);
