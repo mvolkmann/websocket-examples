@@ -22,6 +22,7 @@ const wsServer = Bun.serve({
     open(ws) {
       console.log('WebSocket is open.');
     },
+    // TODO: Wby is this never called?
     drain(ws) {
       console.log('WebSocket is ready to receive more data.');
     },
@@ -29,6 +30,7 @@ const wsServer = Bun.serve({
       console.log(`received "${message}"`);
       ws.send('Hello from server!');
     },
+    // TODO: Wby is this called?
     close(ws, code, message) {
       console.log('WebSocket closed with code', code, 'and message', message);
     }

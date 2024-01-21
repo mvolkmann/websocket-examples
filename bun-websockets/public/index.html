@@ -6,7 +6,7 @@
       const ws = new WebSocket('ws://localhost:3001');
       ws.onopen = () => {
         console.log('ws open');
-        ws.send('Hello from client');
+        ws.send('Hello from client!');
       };
       ws.onmessage = event => {
         console.log(`received "${event.data}"`);
