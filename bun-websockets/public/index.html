@@ -2,29 +2,70 @@
 <html lang="en">
   <head>
     <title>WebSocket Demo</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      integrity="sha384-U7nmwYozlJwxnpCeC+X+JOS3WWNqSfJKSgSs/VAaek8V0QOo5txs7K1MYuKpjzkI"
+      crossorigin="anonymous"
+    ></script>
     <script>
-      const ws = new WebSocket('ws://localhost:3001');
-      ws.onopen = () => {
-        console.log('ws open');
-        ws.send('Hello from client!');
-      };
-      ws.onmessage = event => {
-        console.log(`received "${event.data}"`);
+      let ws;
 
+      function connect() {
+        console.log('attempting WebSocket connection');
+        ws = new WebSocket('ws://localhost:3001');
+
+        ws.onopen = () => {
+          console.log('WebSocket connection was opened');
+          ws.send('Hello from client!');
+        };
+
+        ws.onmessage = event => {
+          const received = document.getElementById('received');
+          received.textContent = event.data;
+        };
+
+        ws.onerror = error => {
+          console.log('ws error:', error);
+        };
+
+        ws.onclose = () => {
+          console.log('WebSocket connection was closed');
+          // Attempt to reconnect after two seconds.
+          setTimeout(connect, 2000);
+        };
+      }
+
+      connect();
+
+      function close() {
         // Either the client or the server can close the connection.
-        ws.send('stop'); // ask server to close the WebSocket
-        // ws.close(); // close WebSocket from client
-      };
-      ws.onerror = error => {
-        console.log('ws error:', error);
-      };
-      ws.onclose = () => {
-        console.log('ws closed');
-      };
+        // ws.send('stop'); // ask server to close the WebSocket
+        ws?.close(); // close WebSocket from client
+      }
+
+      function send(event, message) {
+        const form = event.target;
+        ws?.send(message);
+        form.reset();
+      }
     </script>
   </head>
-  <body>
+  <body x-data="{message: ''}">
     <h1>WebSockets Demo</h1>
-    <p>See output in DevTools Console.</p>
+    <form @submit.prevent="send(event, message)">
+      <label>
+        Message
+        <input type="text" x-model="message" />
+      </label>
+      <button>Send</button>
+    </form>
+    <div>
+      <button @click="close()">Close WebSocket Connection</button>
+    </div>
+    <fieldset>
+      <legend>Last Message Received</legend>
+      <div id="received"></div>
+    </fieldset>
   </body>
 </html>

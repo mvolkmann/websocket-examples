@@ -21,7 +21,7 @@ const wsServer = Bun.serve({
     open(ws) {
       console.log('WebSocket is open.');
     },
-    // TODO: Wby is this never called?
+    // TODO: Why is this never called?
     drain(ws) {
       console.log('WebSocket is ready to receive more data.');
     },
@@ -30,11 +30,8 @@ const wsServer = Bun.serve({
       if (message === 'stop') {
         ws.close();
       } else {
-        ws.send('Hello from server!');
+        ws.send(`Thank you for sending "${message}".`);
       }
-    },
-    error(ws, error) {
-      console.error('WebSocket error:', error);
     },
     // See WebSocket protocol status codes at
     // https://datatracker.ietf.org/doc/html/rfc6455#section-7.4
