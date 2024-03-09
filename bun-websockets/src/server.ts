@@ -40,6 +40,6 @@ const wsServer = Bun.serve({
   }
 });
 
-console.log('WebSocket server is listening on port', wsServer.port);
+console.log('listening on port', wsServer.port);
 
 export default app;

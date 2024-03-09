@@ -47,6 +47,6 @@ async function countdown(ws: WebSocket, start: number) {
   }
 }
 
-console.log('WebSocket server is listening on port', wsServer.port);
+console.log('listening on port', wsServer.port);
 
 export default app;
