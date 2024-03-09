@@ -7,11 +7,10 @@
     <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
   </head>
   <body>
-    <h1>WebSocket Demo</h1>
     <div
       hx-ext="ws"
       ws-connect="ws://localhost:3001"
-      hx-on:htmx:ws-after-send="document.querySelector('form').reset()"
+      hx-on::ws-after-send="document.querySelector('form').reset()"
     >
       <form ws-send>
         <label>
