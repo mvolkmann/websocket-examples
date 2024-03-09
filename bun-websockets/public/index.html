@@ -40,12 +40,12 @@
       function close() {
         // Either the client or the server can close the connection.
         // ws.send('stop'); // ask server to close the WebSocket
-        ws?.close(); // close WebSocket from client
+        ws.close(); // close WebSocket from client
       }
 
       function send(event, message) {
         const form = event.target;
-        ws?.send(message);
+        ws.send(message);
         form.reset();
       }
     </script>
