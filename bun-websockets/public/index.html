@@ -44,8 +44,8 @@
       }
 
       function send(event, message) {
-        const form = event.target;
         ws.send(message);
+        const form = event.target;
         form.reset();
       }
     </script>
